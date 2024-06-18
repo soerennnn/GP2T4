@@ -25,14 +25,16 @@ int main(void)  {
 
     while(1){
         // Überprüfen des Taster-Zustands
-        // Während der Taster gedrückt ist, soll die LED mit 2Hz blinken. Ist der Taster nicht gedrückt, soll die LED mit 0,5Hz blinken
+        // Während der Taster gedrückt ist, soll die LED mit 2Hz blinken. Ist der Taster nicht gedrückt dauerhaft leuchten
         if (PINC & (1 << PC0)) {
+            TCCR1A |= (1 << COM1A0); // Toggle OC1A (PB1) on Compare Match
              // Taster gedrückt, setze Compare Match Wert für 2Hz
-            OCR1A = 62500;
+            OCR1A = 15625;
             }   
         else {
-            // Taster nicht gedrückt, setze Compare Match Wert für 0.5Hz
-            OCR1A = 15625;
+            // Taster nicht gedrückt
+            TCCR1A &= ~(1 << COM1A0); // Toggle OC1A (PB1) on Compare Match
+            PORTB |= (1<<PB5);
         }
 }
 }
